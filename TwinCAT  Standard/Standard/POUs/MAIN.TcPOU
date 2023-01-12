@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="MAIN" Id="{d6d3824f-efb7-433e-ad6f-7584e91a3e76}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	fbTon : TON := (PT :=T#10S);
+	fbTonIN  : BOOL ;
+	fbToff : TOF := (PT := T#10S);
+	
+	fbTrigger : R_TRIG;
+	fbTriggerEnable: BOOL;
+	upCounter : ULINT;
+	
+	EventBuffer : FB_EventBuffer;
+	
+	AddEvent : BOOL;
+	stEventToAdd : ST_Event;
+	bEventToAddError : BOOL;
+	
+
+	
+	
+	
+	GetAndRemoveEvent : BOOL;
+	stLastReadEvent  : ST_Event;
+	bGetAndRemoveEventError : BOOL;
+	
+	
+	ReadCoilsExample : FB_ModbusTCPIP_ReadCoils;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Start Main Rutine
+
+fbTon(IN := fbTonIN);
+fbToff(IN := fbTonIN);
+
+fbTrigger(CLK := fbTriggerEnable);
+IF fbTrigger.Q THEN
+	upCounter := upCounter + 1;
+END_IF
+
+IF AddEvent THEN
+	EventBuffer.AddEvent(stEvent := stEventToAdd, bError => bEventToAddError);
+	AddEvent := FALSE;
+	END_IF
+
+IF GetAndRemoveEvent THEN
+	EventBuffer.GetAndRemoveEvent(stEvent => stLastReadEvent, bError => bGetAndRemoveEventError);
+	GetAndRemoveEvent := FALSE;
+	
+END_IF
+
+ReadCoilsExample();]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="132" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="77" Count="4" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="105" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

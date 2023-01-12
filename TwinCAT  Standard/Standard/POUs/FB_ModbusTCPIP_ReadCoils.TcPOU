@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB_ModbusTCPIP_ReadCoils" Id="{6eabe492-3d96-4fc3-85ca-686ce9fb6388}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ModbusTCPIP_ReadCoils
+
+VAR
+
+fbMBReadCoils : FB_MBReadCoils ;
+nReadValue : BYTE;
+
+eReadState : (WAIT, TRIGGER,READ);
+fbTrigger : R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbTrigger();
+IF fbTrigger.Q THEN
+	IF eReadState = WAIT THEN 
+	eReadState := TRIGGER;
+	END_IF
+END_IF
+
+
+CASE eReadState OF
+	
+	WAIT :
+	
+	// Do nothing
+	
+	
+	TRIGGER :
+	
+		fbMBReadCoils(
+		
+		sIPAddr   := '192.168.1.175',
+		nTCPPort  := 502,
+		nUnitID   := 16#FF,
+		nQuantity := 1,
+		nMBAddr   := 0,
+		cbLength  := SIZEOF(nReadValue),
+		pDestAddr := ADR(nReadValue),
+		bExecute  := TRUE,
+		tTimeout  :=T#5S,
+		bBusy=>,
+		bError=>,
+		nErrId=>,
+		cbRead=>,
+						);
+		eReadState := READ;
+	
+	READ :
+	
+	// Here we will be waiting for the response
+		fbMBReadCoils(bExecute := FALSE);
+		IF NOT fbMBReadCoils.bBusy OR fbMBReadCoils.bError THEN
+			eReadState :=WAIT;
+			
+		END_IF
+		
+END_CASE
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_ModbusTCPIP_ReadCoils">
+      <LineId Id="72" Count="1" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="35" Count="4" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="60" Count="2" />
+      <LineId Id="83" Count="3" />
+      <LineId Id="67" Count="2" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="87" Count="3" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="91" Count="1" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="105" Count="1" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
