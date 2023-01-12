@@ -17,6 +17,7 @@ VAR
 	stEventToAdd : ST_Event;
 	bEventToAddError : BOOL;
 	
+	fbTon_MotorDelay : TON := (PT :=T#25S);
 
 	
 	
@@ -36,6 +37,7 @@ END_VAR
 fbTon(IN := fbTonIN);
 fbToff(IN := fbTonIN);
 
+fbTon_MotorDelay(IN := fbTonIn);
 fbTrigger(CLK := fbTriggerEnable);
 IF fbTrigger.Q THEN
 	upCounter := upCounter + 1;
@@ -54,23 +56,5 @@ END_IF
 
 ReadCoilsExample();]]></ST>
     </Implementation>
-    <LineIds Name="MAIN">
-      <LineId Id="132" Count="0" />
-      <LineId Id="134" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="17" Count="2" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="77" Count="4" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="106" Count="0" />
-      <LineId Id="105" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
